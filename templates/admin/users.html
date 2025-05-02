@@ -1,0 +1,185 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin - Benutzerverwaltung{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Admin Sidebar -->
+    <div class="col-lg-3 mb-4">
+        <div class="admin-sidebar">
+            <h4 class="mb-4">Admin-Bereich</h4>
+            <div class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin_users') }}" class="admin-nav-item d-block active">
+                    <i class="fas fa-users"></i>Benutzer
+                </a>
+                <a href="{{ url_for('admin_forum') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-comments"></i>Forum
+                </a>
+                <a href="{{ url_for('admin_rules') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-book"></i>Regelwerk
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-cog"></i>Einstellungen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Benutzerverwaltung</h1>
+            <button class="btn btn-primary">
+                <i class="fas fa-user-plus me-2"></i>Neuer Benutzer
+            </button>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form class="row g-3" action="#" method="get">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Benutzername oder E-Mail" name="search">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" name="role">
+                            <option value="">Alle Rollen</option>
+                            <option value="admin">Administratoren</option>
+                            <option value="mod">Moderatoren</option>
+                            <option value="user">Benutzer</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Filtern</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Users Table -->
+        <div class="card">
+            <div class="admin-header">
+                <i class="fas fa-users me-2"></i>Benutzer ({{ users.total }})
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Benutzername</th>
+                                <th>E-Mail</th>
+                                <th>Rolle</th>
+                                <th>Registriert am</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users.items %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>
+                                        <a href="{{ url_for('user_profile', username=user.username) }}">
+                                            {{ user.username }}
+                                        </a>
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.is_admin %}
+                                            <span class="badge bg-danger">Admin</span>
+                                        {% elif user.is_mod %}
+                                            <span class="badge bg-success">Moderator</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Benutzer</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="fas fa-edit me-2"></i>Bearbeiten
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="fas fa-key me-2"></i>Passwort zurücksetzen
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    {% if user.is_admin or user.is_mod %}
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="fas fa-user me-2"></i>Zum Benutzer herabstufen
+                                                        </a>
+                                                    {% else %}
+                                                        <a class="dropdown-item" href="#">
+                                                            <i class="fas fa-user-shield me-2"></i>Zum Moderator ernennen
+                                                        </a>
+                                                    {% endif %}
+                                                </li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#">
+                                                        <i class="fas fa-trash-alt me-2"></i>Löschen
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if users.pages > 1 %}
+                    <div class="p-3">
+                        <nav aria-label="Benutzer Navigation">
+                            <ul class="pagination justify-content-center mb-0">
+                                <li class="page-item {% if not users.has_prev %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin_users', page=users.prev_num) if users.has_prev else '#' }}">
+                                        <i class="fas fa-angle-left"></i> Zurück
+                                    </a>
+                                </li>
+                                
+                                {% for page_num in users.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                    {% if page_num %}
+                                        <li class="page-item {% if page_num == users.page %}active{% endif %}">
+                                            <a class="page-link" href="{{ url_for('admin_users', page=page_num) }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <li class="page-item {% if not users.has_next %}disabled{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin_users', page=users.next_num) if users.has_next else '#' }}">
+                                        Weiter <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

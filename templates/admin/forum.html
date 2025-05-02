@@ -1,0 +1,127 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin - Forumverwaltung{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Admin Sidebar -->
+    <div class="col-lg-3 mb-4">
+        <div class="admin-sidebar">
+            <h4 class="mb-4">Admin-Bereich</h4>
+            <div class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin_users') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-users"></i>Benutzer
+                </a>
+                <a href="{{ url_for('admin_forum') }}" class="admin-nav-item d-block active">
+                    <i class="fas fa-comments"></i>Forum
+                </a>
+                <a href="{{ url_for('admin_rules') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-book"></i>Regelwerk
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-cog"></i>Einstellungen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Forumverwaltung</h1>
+            <button class="btn btn-primary">
+                <i class="fas fa-folder-plus me-2"></i>Neue Kategorie
+            </button>
+        </div>
+        
+        <!-- Forum Categories -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-folder me-2"></i>Forumkategorien verwalten
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for category in categories %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <i class="{{ category.icon }} fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h5 class="mb-1">{{ category.title }}</h5>
+                                        {% if category.description %}
+                                            <p class="mb-0 text-muted">{{ category.description }}</p>
+                                        {% endif %}
+                                        <div>
+                                            <span class="badge bg-primary me-2">{{ category.topics.count() }} Themen</span>
+                                            {% if category.is_private %}
+                                                <span class="badge bg-warning">Privat</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add New Category Form -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="h5 mb-0">Neue Kategorie hinzufügen</h4>
+            </div>
+            <div class="card-body">
+                <form action="#" method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="title" class="form-label">Titel</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="order" class="form-label">Reihenfolge</label>
+                            <input type="number" class="form-control" id="order" name="order" value="0">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Beschreibung</label>
+                        <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="icon" class="form-label">Icon (Font Awesome)</label>
+                            <input type="text" class="form-control" id="icon" name="icon" value="fas fa-comments">
+                            <div class="form-text">
+                                <small>Beispiele: fas fa-comments, fas fa-users, fas fa-bullhorn, fas fa-car, fas fa-shield-alt</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="is_private" class="form-label d-block">Private Kategorie?</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="is_private" name="is_private">
+                                <label class="form-check-label" for="is_private">Privat (nur für angemeldete Benutzer)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Kategorie speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

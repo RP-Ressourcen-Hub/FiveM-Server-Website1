@@ -1,0 +1,181 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin - Regelwerk-Verwaltung{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Admin Sidebar -->
+    <div class="col-lg-3 mb-4">
+        <div class="admin-sidebar">
+            <h4 class="mb-4">Admin-Bereich</h4>
+            <div class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin_users') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-users"></i>Benutzer
+                </a>
+                <a href="{{ url_for('admin_forum') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-comments"></i>Forum
+                </a>
+                <a href="{{ url_for('admin_rules') }}" class="admin-nav-item d-block active">
+                    <i class="fas fa-book"></i>Regelwerk
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-cog"></i>Einstellungen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="col-lg-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Regelwerk-Verwaltung</h1>
+            <div>
+                <button class="btn btn-outline-primary me-2">
+                    <i class="fas fa-plus-circle me-2"></i>Abschnitt hinzufügen
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Regel hinzufügen
+                </button>
+            </div>
+        </div>
+        
+        <!-- Rules Table -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-book me-2"></i>Regelabschnitte und Regeln
+            </div>
+            <div class="card-body">
+                <!-- Sortable Sections -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="h5 mb-0">Regelabschnitte</h3>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sort me-1"></i>Sortieren
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="list-group">
+                        {% for section in sections %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-primary me-2">{{ section.id }}</span>
+                                    <strong>{{ section.title }}</strong>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="collapse" data-bs-target="#section-rules-{{ section.id }}">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-primary me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="collapse" id="section-rules-{{ section.id }}">
+                                <div class="list-group-item bg-light">
+                                    {% if section.rules.count() > 0 %}
+                                        <div class="table-responsive">
+                                            <table class="table table-sm mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>§</th>
+                                                        <th>Titel</th>
+                                                        <th>Inhalt</th>
+                                                        <th>Bestrafung</th>
+                                                        <th>Aktionen</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for rule in section.rules %}
+                                                        <tr>
+                                                            <td><strong>{{ rule.paragraph }}</strong></td>
+                                                            <td>{{ rule.title }}</td>
+                                                            <td>{{ rule.content|truncate(50) }}</td>
+                                                            <td>
+                                                                {% if rule.punishment %}
+                                                                    {{ rule.punishment|truncate(30) }}
+                                                                {% else %}
+                                                                    <span class="text-muted">-</span>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td>
+                                                                <a href="#" class="btn btn-sm btn-outline-primary me-1">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                <a href="#" class="btn btn-sm btn-outline-danger">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    {% else %}
+                                        <p class="mb-0 text-muted">Keine Regeln in diesem Abschnitt.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Add New Rule Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="h5 mb-0">Neue Regel hinzufügen</h4>
+                    </div>
+                    <div class="card-body">
+                        <form action="#" method="post">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="section" class="form-label">Abschnitt</label>
+                                    <select class="form-select" id="section" name="section_id" required>
+                                        <option value="" selected disabled>Bitte wählen...</option>
+                                        {% for section in sections %}
+                                            <option value="{{ section.id }}">{{ section.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="paragraph" class="form-label">Paragraph</label>
+                                    <input type="text" class="form-control" id="paragraph" name="paragraph" placeholder="z.B. §1.4" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="order" class="form-label">Reihenfolge</label>
+                                    <input type="number" class="form-control" id="order" name="order" value="0">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Titel</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="content" class="form-label">Inhalt</label>
+                                <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="punishment" class="form-label">Konsequenz bei Verstoß</label>
+                                <input type="text" class="form-control" id="punishment" name="punishment">
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Regel speichern
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

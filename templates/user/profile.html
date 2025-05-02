@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block title %}Profil von {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Profil-Informationen -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Benutzerprofil</h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="avatar-wrapper mb-3">
+                    {% if user.avatar %}
+                        <img src="{{ url_for('static', filename='img/avatars/' + user.avatar) }}" alt="{{ user.username }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                        <div class="avatar-placeholder rounded-circle bg-secondary d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; margin: 0 auto;">
+                            <i class="fas fa-user fa-5x text-light"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <h4>{{ user.username }}</h4>
+                
+                {% if user.is_admin %}
+                    <span class="badge bg-danger mb-2">Administrator</span>
+                {% elif user.is_mod %}
+                    <span class="badge bg-success mb-2">Moderator</span>
+                {% endif %}
+                
+                <p class="text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>Mitglied seit {{ user.created_at.strftime('%d.%m.%Y') }}
+                </p>
+                
+                {% if user.last_seen %}
+                    <p class="text-muted">
+                        <i class="fas fa-clock me-2"></i>Zuletzt online: {{ user.last_seen.strftime('%d.%m.%Y, %H:%M') }}
+                    </p>
+                {% endif %}
+                
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                    <div class="mt-3">
+                        <a href="#" class="btn btn-primary btn-sm" disabled>
+                            <i class="fas fa-edit me-2"></i>Profil bearbeiten
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Kontaktinformationen -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="mb-0">Kontakt</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% if user.discord_id %}
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fab fa-discord me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted d-block">Discord</small>
+                                {{ user.discord_id }}
+                            </div>
+                        </li>
+                    {% endif %}
+                    
+                    {% if user.steam_id %}
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fab fa-steam me-3 text-primary"></i>
+                            <div>
+                                <small class="text-muted d-block">Steam</small>
+                                {{ user.steam_id }}
+                            </div>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Benutzer-Inhalte -->
+    <div class="col-md-8">
+        <!-- Über mich -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Über mich</h5>
+            </div>
+            <div class="card-body">
+                {% if user.bio %}
+                    <p>{{ user.bio }}</p>
+                {% else %}
+                    <p class="text-muted">Noch keine Biografie vorhanden.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Letzte Beiträge -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Letzte Forumbeiträge</h5>
+            </div>
+            <div class="card-body">
+                {% if posts %}
+                    <div class="list-group">
+                        {% for post in posts %}
+                            <a href="{{ url_for('forum_topic', id=post.topic_id) }}#post-{{ post.id }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ post.topic.title }}</h6>
+                                    <small>{{ post.created_at.strftime('%d.%m.%Y') }}</small>
+                                </div>
+                                <p class="mb-1">{{ post.content|striptags|truncate(100) }}</p>
+                                <small>In: {{ post.topic.category.title }}</small>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">Noch keine Beiträge verfasst.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Admin Sidebar -->
+    <div class="col-lg-3 mb-4">
+        <div class="admin-sidebar">
+            <h4 class="mb-4">Admin-Bereich</h4>
+            <div class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item d-block active">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin_users') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-users"></i>Benutzer
+                </a>
+                <a href="{{ url_for('admin_forum') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-comments"></i>Forum
+                </a>
+                <a href="{{ url_for('admin_rules') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-book"></i>Regelwerk
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-cog"></i>Einstellungen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="col-lg-9">
+        <h1 class="mb-4">Admin Dashboard</h1>
+        
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                        <h3>{{ user_count }}</h3>
+                        <p class="text-muted mb-0">Benutzer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-comments fa-3x mb-3 text-primary"></i>
+                        <h3>{{ topic_count|default(0) }}</h3>
+                        <p class="text-muted mb-0">Themen</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-reply fa-3x mb-3 text-primary"></i>
+                        <h3>{{ post_count|default(0) }}</h3>
+                        <p class="text-muted mb-0">Beiträge</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-file-alt fa-3x mb-3 text-primary"></i>
+                        <h3>{{ rule_count|default(0) }}</h3>
+                        <p class="text-muted mb-0">Regeln</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activities and Quick Actions -->
+        <div class="row">
+            <!-- Recent Activities -->
+            <div class="col-md-8 mb-4">
+                <div class="card admin-card">
+                    <div class="admin-header">
+                        <i class="fas fa-history me-2"></i>Letzte Aktivitäten
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-user-plus me-2 text-success"></i>
+                                        <strong>Neuer Benutzer:</strong> max2024
+                                    </div>
+                                    <small class="text-muted">vor 2 Stunden</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-comment-alt me-2 text-primary"></i>
+                                        <strong>Neuer Beitrag:</strong> Willkommen auf dem Server!
+                                    </div>
+                                    <small class="text-muted">vor 3 Stunden</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-edit me-2 text-warning"></i>
+                                        <strong>Regel bearbeitet:</strong> §2.3 Powergaming
+                                    </div>
+                                    <small class="text-muted">vor 5 Stunden</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-user-shield me-2 text-danger"></i>
+                                        <strong>Benutzer gesperrt:</strong> troublemaker22
+                                    </div>
+                                    <small class="text-muted">vor 8 Stunden</small>
+                                </div>
+                            </li>
+                            <li class="list-group-item p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-thumbtack me-2 text-info"></i>
+                                        <strong>Thema angepinnt:</strong> Serverupdate am 10.05.2025
+                                    </div>
+                                    <small class="text-muted">vor 1 Tag</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="col-md-4 mb-4">
+                <div class="card admin-card">
+                    <div class="admin-header">
+                        <i class="fas fa-bolt me-2"></i>Schnellaktionen
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('admin_users') }}" class="btn btn-primary mb-2">
+                                <i class="fas fa-user-plus me-2"></i>Benutzer hinzufügen
+                            </a>
+                            <a href="{{ url_for('admin_forum') }}" class="btn btn-primary mb-2">
+                                <i class="fas fa-folder-plus me-2"></i>Kategorie erstellen
+                            </a>
+                            <a href="{{ url_for('admin_rules') }}" class="btn btn-primary mb-2">
+                                <i class="fas fa-file-alt me-2"></i>Regel hinzufügen
+                            </a>
+                            <a href="{{ url_for('admin_settings') }}" class="btn btn-primary">
+                                <i class="fas fa-server me-2"></i>Serverinfo aktualisieren
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Server Status -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-server me-2"></i>Server-Status
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="border p-3 rounded text-center">
+                            <h5 class="mb-3">Datenbank</h5>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <i class="fas fa-circle text-success me-2"></i>
+                                <span>Online (PostgreSQL)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="border p-3 rounded text-center">
+                            <h5 class="mb-3">Webserver</h5>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <i class="fas fa-circle text-success me-2"></i>
+                                <span>Online (Flask)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border p-3 rounded text-center">
+                            <h5 class="mb-3">FiveM-Server</h5>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <i class="fas fa-circle text-success me-2"></i>
+                                <span>Online (32/64 Spieler)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

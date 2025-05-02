@@ -1,0 +1,188 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin - Server-Einstellungen{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Admin Sidebar -->
+    <div class="col-lg-3 mb-4">
+        <div class="admin-sidebar">
+            <h4 class="mb-4">Admin-Bereich</h4>
+            <div class="admin-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="{{ url_for('admin_users') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-users"></i>Benutzer
+                </a>
+                <a href="{{ url_for('admin_forum') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-comments"></i>Forum
+                </a>
+                <a href="{{ url_for('admin_rules') }}" class="admin-nav-item d-block">
+                    <i class="fas fa-book"></i>Regelwerk
+                </a>
+                <a href="{{ url_for('admin_settings') }}" class="admin-nav-item d-block active">
+                    <i class="fas fa-cog"></i>Einstellungen
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Content -->
+    <div class="col-lg-9">
+        <h1 class="mb-4">Server-Einstellungen</h1>
+        
+        <!-- Server Info Settings -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-server me-2"></i>Serverinformationen
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="server_name" class="form-label">Server-Name</label>
+                        <input type="text" class="form-control" id="server_name" name="server_name" value="Dein FiveM Roleplay Server">
+                    </div>
+                    <div class="mb-3">
+                        <label for="server_ip" class="form-label">Server-IP / Verbindungsstring</label>
+                        <div class="input-group">
+                            <span class="input-group-text">connect</span>
+                            <input type="text" class="form-control" id="server_ip" name="server_ip" value="yourserver.com">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="discord_link" class="form-label">Discord-Link</label>
+                        <input type="text" class="form-control" id="discord_link" name="discord_link" value="https://discord.gg/yourserver">
+                    </div>
+                    <div class="mb-3">
+                        <label for="teamspeak_link" class="form-label">TeamSpeak-Adresse</label>
+                        <input type="text" class="form-control" id="teamspeak_link" name="teamspeak_link" value="ts.yourserver.com">
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Website Settings -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-globe me-2"></i>Website-Einstellungen
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="site_title" class="form-label">Website-Titel</label>
+                        <input type="text" class="form-control" id="site_title" name="site_title" value="Dein FiveM Roleplay Server">
+                    </div>
+                    <div class="mb-3">
+                        <label for="meta_description" class="form-label">Meta-Beschreibung</label>
+                        <textarea class="form-control" id="meta_description" name="meta_description" rows="2">Offizieller Webauftritt des FiveM Roleplay Servers - Die beste Roleplay-Erfahrung in GTA V</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Website-Farbschema</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="color_scheme" id="dark_theme" value="dark" checked>
+                                <label class="form-check-label" for="dark_theme">
+                                    Dark Theme
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="color_scheme" id="light_theme" value="light">
+                                <label class="form-check-label" for="light_theme">
+                                    Light Theme
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="logo_upload" class="form-label">Server-Logo hochladen</label>
+                        <input class="form-control" type="file" id="logo_upload">
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Feature Toggles -->
+        <div class="card mb-4">
+            <div class="admin-header">
+                <i class="fas fa-toggle-on me-2"></i>Funktionen aktivieren/deaktivieren
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="registration_enabled" checked>
+                            <label class="form-check-label" for="registration_enabled">Registrierung aktiviert</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="forum_enabled" checked>
+                            <label class="form-check-label" for="forum_enabled">Forum aktiviert</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="maintenance_mode">
+                            <label class="form-check-label" for="maintenance_mode">Wartungsmodus aktivieren</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="server_status_widget" checked>
+                            <label class="form-check-label" for="server_status_widget">Server-Status Widget anzeigen</label>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Advanced Settings -->
+        <div class="card">
+            <div class="admin-header">
+                <i class="fas fa-wrench me-2"></i>Erweiterte Einstellungen
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Achtung:</strong> Änderungen in diesem Bereich sollten nur von erfahrenen Administratoren vorgenommen werden.
+                </div>
+                <div class="mb-3">
+                    <label for="posts_per_page" class="form-label">Beiträge pro Seite</label>
+                    <input type="number" class="form-control" id="posts_per_page" name="posts_per_page" value="10">
+                </div>
+                <div class="mb-3">
+                    <label for="cache_timeout" class="form-label">Cache-Timeout (Sekunden)</label>
+                    <input type="number" class="form-control" id="cache_timeout" name="cache_timeout" value="3600">
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="debug_mode">
+                        <label class="form-check-label" for="debug_mode">Debug-Modus aktivieren</label>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Speichern
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

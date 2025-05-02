@@ -1,0 +1,264 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero-Bereich -->
+<div class="hero-section">
+    <div class="card hero-card text-white mb-5">
+        <div class="card-body p-5 text-center">
+            <h1 class="hero-title text-white mb-4">{{ config.SERVER_NAME }}</h1>
+            <p class="lead fs-4 mb-5">Tauche ein in eine realistische Roleplay-Welt mit einer aktiven Community, spannenden Jobs und einzigartigen Features!</p>
+            <div class="mt-5">
+                <a href="{{ config.DISCORD_LINK }}" target="_blank" class="btn btn-primary btn-lg me-3">
+                    <i class="fab fa-discord me-2"></i>Discord beitreten
+                </a>
+                <button class="btn btn-light btn-lg" onclick="copyToClipboard('{{ config.SERVER_IP }}')">
+                    <i class="fas fa-server me-2"></i>{{ config.SERVER_IP }}
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hauptnavigation Karten -->
+    <div class="row mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-book fa-4x mb-4 text-primary"></i>
+                    <h3 class="mb-3">Regelwerk</h3>
+                    <p class="mb-4">Lerne die wichtigsten Regeln unseres Servers kennen, um ein angenehmes Spielerlebnis für alle zu garantieren.</p>
+                    <a href="{{ url_for('rules') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-book-open me-2"></i>Zu den Regeln
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-comments fa-4x mb-4 text-primary"></i>
+                    <h3 class="mb-3">Forum</h3>
+                    <p class="mb-4">Tausche dich mit anderen Spielern aus, finde neue Freunde und bleibe über alle Events informiert.</p>
+                    <a href="{{ url_for('forum') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-arrow-right me-2"></i>Zum Forum
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body p-5">
+                    <i class="fas fa-user-plus fa-4x mb-4 text-primary"></i>
+                    <h3 class="mb-3">Registrieren</h3>
+                    <p class="mb-4">Erstelle einen Account, um Zugriff auf alle Bereiche der Website und die Whitelist-Bewerbung zu erhalten.</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Account erstellen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features-Bereich -->
+    <div class="features-section card mb-5">
+        <div class="card-header p-4">
+            <h2 class="mb-0 fs-1">Unsere Features</h2>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="icon-wrapper mb-4">
+                            <i class="fas fa-users fa-4x text-primary"></i>
+                        </div>
+                        <h3>Aktive Community</h3>
+                        <p class="fs-5">Werde Teil einer lebendigen Community mit regelmäßigen Events und spannenden Roleplay-Geschichten.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="icon-wrapper mb-4">
+                            <i class="fas fa-briefcase fa-4x text-primary"></i>
+                        </div>
+                        <h3>Vielfältige Jobs</h3>
+                        <p class="fs-5">Von Polizei und Notdiensten bis hin zu kriminellen Organisationen - finde deinen Platz in der Stadt.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="icon-wrapper mb-4">
+                            <i class="fas fa-cogs fa-4x text-primary"></i>
+                        </div>
+                        <h3>Einzigartige Scripts</h3>
+                        <p class="fs-5">Erlebe maßgeschneiderte Features, die dein Roleplay-Erlebnis auf ein neues Level heben.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Ankündigungen -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header p-4">
+                    <h2 class="mb-0 fs-1">Neueste Ankündigungen</h2>
+                </div>
+                <div class="card-body p-4">
+                    {% if announcements %}
+                        {% for topic in announcements %}
+                            <div class="announcement-card mb-4 p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h3 class="mb-0">
+                                        <i class="fas fa-bullhorn me-2 text-primary"></i>{{ topic.title }}
+                                    </h3>
+                                    <div class="date-badge">
+                                        <i class="far fa-calendar-alt me-1"></i>{{ topic.created_at.strftime('%d.%m.%Y') }}
+                                    </div>
+                                </div>
+                                <div class="announcement-content mb-3">
+                                    {% if topic.posts.first() %}
+                                        <p class="fs-5">{{ topic.posts.first().content|truncate(150) }}</p>
+                                    {% else %}
+                                        <p class="fs-5">Keine Inhalte verfügbar.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="text-end">
+                                    <a href="{{ url_for('forum_topic', id=topic.id) }}" class="btn btn-primary">
+                                        <i class="fas fa-arrow-right me-2"></i>Weiterlesen
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info p-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-info-circle fa-2x me-3"></i>
+                                <div>
+                                    <h4 class="alert-heading mb-2">Keine Ankündigungen</h4>
+                                    <p class="mb-0">Noch keine Ankündigungen vorhanden. Schaue bald wieder vorbei!</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Server-Infos und Statistiken -->
+        <div class="col-lg-4 mb-4">
+            <div class="card mb-4">
+                <div class="card-header p-4">
+                    <h2 class="mb-0 fs-3">Server-Information</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-4">
+                        <h4 class="mb-3"><i class="fas fa-server me-2 text-primary"></i>Verbindungsdaten</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control form-control-lg" value="{{ config.SERVER_IP }}" id="serverIp" readonly>
+                            <button class="btn btn-primary" type="button" onclick="copyToClipboard('{{ config.SERVER_IP }}')">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="mb-3"><i class="fab fa-discord me-2 text-primary"></i>Discord</h4>
+                        <a href="{{ config.DISCORD_LINK }}" target="_blank" class="btn btn-primary btn-lg w-100">
+                            <i class="fab fa-discord me-2"></i>Discord beitreten
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header p-4">
+                    <h2 class="mb-0 fs-3">Statistiken</h2>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row text-center">
+                        <div class="col-6 mb-4">
+                            <div class="stat-card p-3">
+                                <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+                                <h3 class="mb-1">{{ user_count }}</h3>
+                                <p class="mb-0 text-muted">Benutzer</p>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <div class="stat-card p-3">
+                                <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
+                                <h3 class="mb-1">Aktiv</h3>
+                                <p class="mb-0 text-muted">Whitelist</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card p-3">
+                                <i class="fas fa-comments fa-3x mb-3 text-primary"></i>
+                                <h3 class="mb-1">{{ topic_count|default(0) }}</h3>
+                                <p class="mb-0 text-muted">Themen</p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card p-3">
+                                <i class="fas fa-reply fa-3x mb-3 text-primary"></i>
+                                <h3 class="mb-1">{{ post_count|default(0) }}</h3>
+                                <p class="mb-0 text-muted">Beiträge</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call-to-Action -->
+    <div class="card text-center p-5 mb-5">
+        <h2 class="mb-4 fs-1">Bereit zum Spielen?</h2>
+        <p class="lead fs-4 mb-4">Tritt unserer Community bei und starte noch heute dein Roleplay-Abenteuer!</p>
+        <div class="d-flex justify-content-center">
+            <a href="{{ url_for('rules') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-book me-2"></i>Regeln lesen
+            </a>
+            <a href="{{ config.DISCORD_LINK }}" target="_blank" class="btn btn-outline-primary btn-lg">
+                <i class="fab fa-discord me-2"></i>Discord beitreten
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        const alertHTML = `
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-check-circle fa-2x me-3"></i>
+                    <div>
+                        <h4 class="alert-heading mb-2">Kopiert!</h4>
+                        <p class="mb-0">Server-IP wurde in die Zwischenablage kopiert!</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        const alertContainer = document.querySelector('.container:first-of-type');
+        if (alertContainer) {
+            alertContainer.insertAdjacentHTML('afterbegin', alertHTML);
+            
+            setTimeout(function() {
+                const newAlert = alertContainer.querySelector('.alert');
+                if (newAlert) {
+                    const bsAlert = new bootstrap.Alert(newAlert);
+                    bsAlert.close();
+                }
+            }, 3000);
+        }
+    }, function() {
+        alert('Fehler beim Kopieren der Server-IP. Bitte kopieren Sie die IP manuell.');
+    });
+}
+</script>
+{% endblock %}

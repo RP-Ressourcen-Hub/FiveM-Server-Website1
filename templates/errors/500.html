@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}Serverfehler{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1 class="display-1 text-danger mb-4">500</h1>
+        <h2 class="mb-4">Interner Serverfehler</h2>
+        <p class="lead mb-5">Leider ist etwas schief gelaufen. Wir arbeiten daran, das Problem zu beheben.</p>
+        <div>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Zurück zur Startseite
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

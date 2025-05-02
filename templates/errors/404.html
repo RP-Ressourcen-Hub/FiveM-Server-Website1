@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}Seite nicht gefunden{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <h1 class="display-1 text-danger mb-4">404</h1>
+        <h2 class="mb-4">Seite nicht gefunden</h2>
+        <p class="lead mb-5">Die von Ihnen gesuchte Seite existiert nicht oder wurde verschoben.</p>
+        <div>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Zurück zur Startseite
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
